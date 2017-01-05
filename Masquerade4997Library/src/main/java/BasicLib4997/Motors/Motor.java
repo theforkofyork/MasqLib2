@@ -9,14 +9,19 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import BasicLib4997.Motors.TankDrive.TankDrive;
+import BasicLib4997.Sensors.Clock;
 
 /**
  * This is a custom motor that includes stall detection and telemetry
  */
 public class Motor {
-    private Telemetry telemetry;
     private DcMotor motor;
     private String nameMotor;
+    private Clock clock = new Clock();
+    private double tChange;
+    private double prevPos= 0;
+    private double previousTime = 0;
+    private double startTime = System.nanoTime();
     public Motor(String name){
         this.nameMotor = name;
         motor = FtcOpModeRegister.opModeManager.getHardwareMap().dcMotor.get(name);
@@ -48,13 +53,7 @@ public class Motor {
     public void resetEncoder() {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
-    public void setPowerNoEncoder (double power) {
-        double MAX_POWER = 14;
-        double error = MAX_POWER - getBatteryVoltage();
-        double kp = 0.02;
-        double newPower = power + (error *kp);
-        motor.setPower(newPower);
-    }
+
     public void setPower (double power) {
         motor.setPower(power);
     }
@@ -78,25 +77,28 @@ public class Motor {
         currentPos = motor.getCurrentPosition();
         return currentPos;
     }
-
-    private double getBatteryVoltage() {
-        double result = Double.POSITIVE_INFINITY;
-        for (VoltageSensor sensor : FtcOpModeRegister.opModeManager.getHardwareMap().voltageSensor) {
-            double voltage = sensor.getVoltage();
-            if (voltage > 0) {
-                result = Math.min(result, voltage);
-            }
-        }
-        return result;
-    }
     public double getPower() {
         return motor.getPower();
+    }
+    public double getRate () {
+        double posC = getCurrentPos() - prevPos;
+        double tChange = System.nanoTime() - previousTime;
+        previousTime = System.nanoTime();
+        tChange = tChange / 1e9;
+        prevPos = getCurrentPos();
+        return posC / tChange;
+    }
+    public void setPowerNoEncoder(double targetRate, double power) {
+        double error = targetRate + getRate();
+        double kp = 0.02;
+        double outPut1 =  targetRate + (error * kp);
+        double outPut = targetRate / outPut1;
+        motor.setPower(outPut / 3000);
     }
     public DcMotorController getController() {
         return motor.getController();
     }
     public void telemetryRun (boolean showCurrentPos) {
-
         TankDrive.getTelemetry().addTelemetry(nameMotor + "telemetry");
         TankDrive.getTelemetry().addTelemetry("isStalled", isStalled());
         TankDrive.getTelemetry().addTelemetry("isBusy", isBusy());

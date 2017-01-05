@@ -11,7 +11,7 @@ import BasicLib4997.Motors.TankDrive.TankDrive;
  * Created by Archish on 11/4/16.
  */
 
-@Autonomous(name = "TestTurn", group = "Test")
+@Autonomous(name = "Test", group = "G4")
 public class Test extends LinearOpMode {
     public void main() throws InterruptedException {
 
@@ -26,15 +26,14 @@ public class Test extends LinearOpMode {
 
         TankDrive chimera = new TankDrive(telemetry);
         while (!isStarted()) {
-            chimera.runAllTelemetry(false);
+            chimera.runSensorTelemetry();
             telemetry.update();
-            idle();
         }
         waitForStart();
 
-        chimera.drivePIDRange(POWER, 25, Direction.BACKWARD);
-        TankDrive.getTelemetry().addSticky("RangeMovmentComplete");
-        chimera.turnPID(POWER, 45, Direction.LEFT);
+
+
+
 
 
 

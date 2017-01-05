@@ -43,12 +43,6 @@ public class MotorSystem implements PID_Constants {
         motor3.setPower(power);
         motor4.setPower(power);
     }
-    public void setPowerNoEnoder (double power) {
-        motor1.setPowerNoEncoder(power);
-        motor2.setPowerNoEncoder(power);
-        motor3.setPowerNoEncoder(power);
-        motor4.setPowerNoEncoder(power);
-    }
     public void setPowerLeft (double power) {
         motor1.setPower(power);
         motor2.setPower(power);
@@ -87,9 +81,11 @@ public class MotorSystem implements PID_Constants {
     public void setBrakeMode () {
         setPower(0.001);
     }
-    public int convert(int TICKS) {
-        int centimeters = (int) (TICKS * 35.1070765836);
-        return centimeters;
+    public static int convert(int TICKS) {
+        return (int)(TICKS * 35.1070765836);
+    }
+    public double convert(double TICKS) {
+        return (TICKS * 35.1070765836);
     }
     boolean isStalled () {
         int i;
@@ -99,12 +95,7 @@ public class MotorSystem implements PID_Constants {
         else if (motor3.isStalled()) i = 3;
         else if (motor4.isStalled()) i = 4;
         else i = 0;
-        if (i >= 3) {
-            isStalled = true;
-        }
-        else {
-            isStalled = false;
-        }
+        isStalled = i >= 3;
         return isStalled;
     }
     public boolean isBusy() {

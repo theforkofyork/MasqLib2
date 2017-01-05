@@ -16,7 +16,7 @@ import BasicLib4997.Motors.TankDrive.TankDrive;
  * Created by Archish on 10/6/16.
  */
 
-@Autonomous(name = "ShootParkBlue", group = "Test") // change name
+@Autonomous(name = "ShootParkBlue", group = "G2") // change name
 
 public class ShootParkBlue extends LinearOpMode { // change file name
     public void main() throws InterruptedException {
@@ -35,7 +35,7 @@ public class ShootParkBlue extends LinearOpMode { // change file name
         while (!isStarted()) {
             chimera.setIndexer(0.8);
             telemetry.addData("hue", chimera.beaconColor.hue());
-            chimera.runAllTelemetry(telemetrizeModules = false);
+            chimera.runAllTelemetry();
             telemetry.update();
             idle();
         }

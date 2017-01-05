@@ -33,7 +33,7 @@ public class Template extends LinearOpMode { // change file name
         double HIGH_POWER = 0.90;
         TankDrive chimera = new TankDrive(telemetry);
         while (!isStarted()) {
-            chimera.runAllTelemetry(telemetrizeModules = false);
+            chimera.runAllTelemetry();
             telemetry.update();
             idle();
         }

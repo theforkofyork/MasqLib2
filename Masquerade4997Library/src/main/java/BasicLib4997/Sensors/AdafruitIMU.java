@@ -64,10 +64,18 @@ public class AdafruitIMU {
     public double getHeading() {
         return getAngles()[0];
     }
+    public double getPitch() {
+        return getAngles()[1];
+    }
+    public double getRoll() {
+        return getAngles()[2];
+    }
+
     public void telemetryRun() {
         TankDrive.getTelemetry().addTelemetry("Heading", getHeading());
-        TankDrive.getTelemetry().addTelemetry("Pitch", getAngles()[2]);
-        TankDrive.getTelemetry().addTelemetry("Roll", getAngles()[3]);
+        TankDrive.getTelemetry().addTelemetry("Pitch", getAngles() [1]);
+        TankDrive.getTelemetry().addTelemetry("Roll", getAngles() [2]);
+
     }
 
 }

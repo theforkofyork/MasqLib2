@@ -4,25 +4,24 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import BasicLib4997.Motors.TankDrive.TankDrive;
+
 /**
  * TeleOp NFS
  */
-@TeleOp(name="TeleOpNFS", group="Final")// change name
+@TeleOp(name="TeleOpFSV2", group="Final")// change name
 
-public class TeleopNFS extends LinearOpMode { // change file name
+public class TeleopNFSV2 extends LinearOpMode { // change file name
     public void main() throws InterruptedException {
 
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
-
         TankDrive chimera = new TankDrive(telemetry);
         while (!isStarted()) {
             chimera.setIndexer(0);
             chimera.setCapClamp(1);
             chimera.liftClamp.setPosition(1);
-            telemetry.addData("Voltage", getBatteryVoltage());
             telemetry.update();
             idle();
         }
@@ -79,14 +78,9 @@ public class TeleopNFS extends LinearOpMode { // change file name
             }
 
             if(gamepad2.right_bumper) {
-                power += revUpFactor;
-                if (power > targetPower) {
-                    power = targetPower;
-                    telemetry.addLine("Shooter is Revved Up.");
-                }
-                chimera.shooter.runUsingEncoder();
-                chimera.setPowerShooter(newShooterPower(power));
+                chimera.shooter.setPowerNoEncoder(-2200, 0.7);
             }
+
 
             else if(gamepad2.left_bumper) {
                 power += revUpFactor;
@@ -94,7 +88,6 @@ public class TeleopNFS extends LinearOpMode { // change file name
                     power = targetPower + lowPowerFactor;
                     telemetry.addLine("Shooter is Revved Up.");
                 }
-                chimera.shooter.setPower(newShooterPowerLow(power));
             }
             else {
                 power -= revDownFactor;
@@ -104,19 +97,9 @@ public class TeleopNFS extends LinearOpMode { // change file name
                 if (power < 0) {
                     power = 0;
                 }
-                chimera.setPowerShooter(power);
             }
 
 
-            if (gamepad2.right_bumper && gamepad2.x && chimera.shooter.getPower() < (newShooterPower(targetPower)) + 0.05) {
-                chimera.setIndexer(0.6);
-            }
-            else if (gamepad2.left_bumper && gamepad2.x && chimera.shooter.getPower() < (newShooterPower(targetPower + lowPowerFactor)) + 0.05) {
-                chimera.setIndexer(0.6);
-            }
-            else {
-                chimera.setIndexer(0);
-            }
             if (gamepad2.a){
                 chimera.setBeaconPresser(1);
             }
@@ -146,42 +129,19 @@ public class TeleopNFS extends LinearOpMode { // change file name
                 chimera.setCapClamp(1);
             }
 
-            telemetry.addData("Target Power High", newShooterPower(targetPower));
-            telemetry.addData("Target Power Low", newShooterPower(targetPower + lowPowerFactor));
             telemetry.addData("Shooter Power", chimera.shooter.getPower());
             telemetry.addData("Lift Power", chimera.lift.getPower());
             telemetry.addData("Left Power", left);
             telemetry.addData("Right Power", right);
-            telemetry.addData("Voltage", getBatteryVoltage());
             telemetry.addData("Rate", chimera.shooter.getRate());
             telemetry.update();
 
 
         }
 
+
     }
-    private double getBatteryVoltage() {
-        double result = Double.POSITIVE_INFINITY;
-        for (VoltageSensor sensor : hardwareMap.voltageSensor) {
-            double voltage = sensor.getVoltage();
-            if (voltage > 0) {
-                result = Math.min(result, voltage);
-            }
-        }
-        return result;
-    }
-    private double newShooterPower(double targetPower){
-        double voltage = getBatteryVoltage();
-        double targetVoltage = 13.5;
-        double error = targetVoltage - voltage;
-        return targetPower - (error * 0.04);
-    }
-    private double newShooterPowerLow(double targetPower){
-        double voltage = getBatteryVoltage();
-        double targetVoltage = 13.5;
-        double error = targetVoltage - voltage;
-        return targetPower - (error * 0.1);
-    }
+
 
 
 

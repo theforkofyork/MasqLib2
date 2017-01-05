@@ -16,7 +16,8 @@ import BasicLib4997.Motors.TankDrive.TankDrive;
  * Created by Archish on 10/6/16.
  */
 
-@Autonomous(name = "Debug", group = "Test") // change name
+@Autonomous(name = "Debug", group = "G3") // change name
+@Disabled
 public class DEBUG_AUTO extends LinearOpMode { // change file name
     public void main() throws InterruptedException {
 
@@ -32,8 +33,7 @@ public class DEBUG_AUTO extends LinearOpMode { // change file name
         double HIGH_POWER = 0.90;
         TankDrive chimera = new TankDrive(telemetry);
         while (!isStarted()) {
-            chimera.clock.start();
-            chimera.runAllTelemetry(telemetrizeModules = true);
+            chimera.runAllTelemetry();
             telemetry.update();
             idle();
         }
