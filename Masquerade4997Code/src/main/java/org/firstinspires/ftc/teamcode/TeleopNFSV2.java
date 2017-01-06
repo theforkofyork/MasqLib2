@@ -27,6 +27,7 @@ public class TeleopNFSV2 extends LinearOpMode { // change file name
         }
 
         waitForStart();
+
         double power = 0;
         double revUpFactor = 0.1;
         double revDownFactor = 0.01;
@@ -78,26 +79,30 @@ public class TeleopNFSV2 extends LinearOpMode { // change file name
             }
 
             if(gamepad2.right_bumper) {
-                chimera.shooter.setPowerNoEncoder(-2200, 0.7);
+                if (power > targetPower) {
+                    power = targetPower;
+                }
+                chimera.shooter.runUsingEncoder();
+                chimera.setPowerShooter(power);
             }
 
-
             else if(gamepad2.left_bumper) {
-                power += revUpFactor;
                 if (power > targetPower) {
                     power = targetPower + lowPowerFactor;
-                    telemetry.addLine("Shooter is Revved Up.");
                 }
+                chimera.shooter.setPower(power);
             }
             else {
                 power -= revDownFactor;
-                if (power < targetPower) {
-                    telemetry.addLine("Shooter is Not Revved Up.");
-                }
                 if (power < 0) {
                     power = 0;
                 }
+                chimera.setPowerShooter(power);
             }
+
+            //if (chimera.shooter.getRate() <= -2200) {
+           //     chimera.shooter.setPower(0);
+           // }
 
 
             if (gamepad2.a){
