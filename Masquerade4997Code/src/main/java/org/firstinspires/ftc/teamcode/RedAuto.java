@@ -65,7 +65,7 @@ public class RedAuto extends LinearOpMode { // change file name
 
         chimera.turnPID(POWER, (int) (48 - disruption), Direction.LEFT, 3);
         // drive to the first beacon
-        chimera.drivePID(0.7, 148, Direction.FORWARD, 1000, 48 - disruption);
+        chimera.drivePID(0.7, 148, Direction.FORWARD);
         // turn parallel to the
         double changeTurn = chimera.imu.getHeading();
         double turn = changeTurn - parallelAngle;

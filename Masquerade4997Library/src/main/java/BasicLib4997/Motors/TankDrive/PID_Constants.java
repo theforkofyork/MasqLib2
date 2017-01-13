@@ -1,14 +1,16 @@
 package BasicLib4997.Motors.TankDrive;
 
 
+import static android.os.Build.ID;
+
 /**
  * These are the constants used in PID
  */
 public interface PID_Constants {
     double
             KP_TURN = 0.014,
-            KI_TURN = 0.000000000003,
-            KD_TURN = 0.001,
+            KI_TURN = 0.0000000000018,
+            KD_TURN = 0.00095,
             ID = 1;
     double
             KP_STRAIGHT = 0.03,

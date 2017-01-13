@@ -20,7 +20,7 @@ public class TeleopNFS extends LinearOpMode { // change file name
         TankDrive chimera = new TankDrive(telemetry);
         while (!isStarted()) {
             chimera.setIndexer(0);
-            chimera.setCapClamp(1);
+            chimera.setCapClamp(0.9);
             chimera.liftClamp.setPosition(1);
             telemetry.addData("Voltage", getBatteryVoltage());
             telemetry.update();
@@ -134,12 +134,16 @@ public class TeleopNFS extends LinearOpMode { // change file name
             }
             else chimera.lift.moveDown(0);
             if (gamepad1.x) {
-                chimera.liftClamp.setPosition(0);
-            }
-            else {
                 chimera.liftClamp.setPosition(1);
             }
+            else {
+                chimera.liftClamp.setPosition(0);
+            }
+
             if (gamepad1.b) {
+                chimera.setCapClamp(0);
+            }
+            else if (chimera.lift.getPower() > 0) {
                 chimera.setCapClamp(0);
             }
             else {

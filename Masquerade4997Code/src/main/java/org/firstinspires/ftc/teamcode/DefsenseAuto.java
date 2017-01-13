@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import BasicLib4997.Motors.DefenseBot;
 import BasicLib4997.Motors.TankDrive.Direction;
 import BasicLib4997.Motors.TankDrive.TankDrive;
 
@@ -16,8 +17,8 @@ import BasicLib4997.Motors.TankDrive.TankDrive;
  * Created by Archish on 10/6/16.
  */
 
-@Autonomous(name = "Debug", group = "G3") // change name
-public class DEBUG_AUTO extends LinearOpMode { // change file name
+@Autonomous(name = "DefenseAuto", group = "G3") // change name
+public class DefsenseAuto extends LinearOpMode { // change file name
     public void main() throws InterruptedException {
 
     }
@@ -30,12 +31,20 @@ public class DEBUG_AUTO extends LinearOpMode { // change file name
         double LOW_POWER = 0.50;
         double POWER = 0.70;
         double HIGH_POWER = 0.90;
-        TankDrive chimera = new TankDrive(telemetry);
+        DefenseBot chimera = new DefenseBot(telemetry);
         while (!isStarted()) {
-            chimera.runAllTelemetry();
             telemetry.update();
             idle();
         }
         waitForStart();
+        while (opModeIsActive()) {
+            chimera.setPowerRight(1);
+            chimera.setPowerLeft(1);
+            Thread.sleep(1000);
+            chimera.setPowerRight(1);
+            chimera.setPowerLeft(-1);
+        }
+
+
     }
 }
